@@ -1,15 +1,19 @@
 import express from "express";
 import cors from "cors";
+import dotenv from "dotenv";
 
+import adminRouter from "./routes/adminRoutes.js";
 import userRouter from "./routes/userRoutes.js";
 import rolesRouter from "./routes/roleRoutes.js";
 import expenseRouter from "./routes/expenseRoutes.js";
 import expenseCategoryRouter from "./routes/expenseCategoryRoutes.js";
 import AppError from "./utils/appError.js";
 
-const app = express();
+dotenv.config({
+  path: ".env"
+});
 
-app.use(express.json());
+const app = express();
 
 app.use(
   cors({
@@ -19,6 +23,11 @@ app.use(
   })
 );
 
+app.use(express.json({ limit: "16kb" }));
+app.use(express.urlencoded({ extended: true, limit: "16kb" }));
+
+
+app.use("/api/v1/admin", adminRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/roles", rolesRouter);
 app.use("/api/v1/expenses", expenseRouter);
