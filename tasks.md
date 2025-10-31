@@ -127,3 +127,74 @@ That sounds like a great project! To really challenge yourself and sharpen your 
 ---
 
 These tasks will push you to improve in security, scalability, performance, and data integrity—all essential skills for building complex backend systems. Let me know if you'd like deeper insights on any of these or need help implementing any particular feature!
+
+
+###
+
+   *  Create S3 buckets for frontend (deployement)
+      -  Deployement
+
+   *  Create S3 buckets for backend
+      -  Deployement
+      -  Storing profile images
+      -  Storing invoice files (PDGs, images)
+
+
+| **Feature / Action**            | **User** | **Manager / Group Admin** | **Admin** | **Super Admin** |
+| ------------------------------- | :------: | :-----------------------: | :-------: | :-------------: |
+| **Authentication & Profile**    |          |                           |           |                 |
+| Register / Login                |     ✅    |             ✅             |     ✅     |        ✅        |
+| Edit personal profile           |     ✅    |             ✅             |     ✅     |        ✅        |
+| View other users’ profiles      |     ❌    |        ✅ (in group)       |     ✅     |        ✅        |
+| Manage group/team members       |     ❌    |             ✅             |     ✅     |        ✅        |
+| Suspend / delete users          |     ❌    |             ❌             |     ✅     |        ✅        |
+
+| **Expenses Management**         |          |                           |           |                 |
+| Add personal expenses           |     ✅    |             ✅             |     ✅     |        ✅        |
+| Edit / delete own expenses      |     ✅    |             ✅             |     ✅     |        ✅        |
+| View group/team expenses        |     ❌    |             ✅             |     ✅     |        ✅        |
+| Approve / reject expenses       |     ❌    |             ✅             |     ✅     |        ✅        |
+| View all expenses (system-wide) |     ❌    |             ❌             |     ✅     |        ✅        |
+| Delete any expense              |     ❌    |             ❌             |     ✅     |        ✅        |
+
+| **Categories & Tags**           |          |                           |           |                 |
+| Create/edit own categories      |     ✅    |             ✅             |     ✅     |        ✅        |
+| Manage global categories        |     ❌    |             ❌             |     ✅     |        ✅        |
+
+| **Reports & Analytics**         |          |                           |           |                 |
+| View personal reports           |     ✅    |             ✅             |     ✅     |        ✅        |
+| View team reports               |     ❌    |             ✅             |     ✅     |        ✅        |
+| View platform-wide reports      |     ❌    |             ❌             |     ✅     |        ✅        |
+
+| **Billing & Subscriptions**     |          |                           |           |                 |
+| View personal billing           |     ✅    |             ✅             |     ✅     |        ✅        |
+| Manage team subscription        |     ❌    |             ✅             |     ✅     |        ✅        |
+| Manage all subscriptions        |     ❌    |             ❌             |     ✅     |        ✅        |
+
+| **System Management**           |          |                           |           |                 |
+| Access admin dashboard          |     ❌    |             ❌             |     ✅     |        ✅        |
+| Access super admin panel        |     ❌    |             ❌             |     ❌     |        ✅        |
+| Manage roles & permissions      |     ❌    |             ❌             |     ❌     |        ✅        |
+| Access audit logs               |     ❌    |             ❌             |     ✅     |        ✅        |
+| Manage backups & configurations |     ❌    |             ❌             |     ❌     |        ✅        |
+| Impersonate users (debugging)   |     ❌    |             ❌             |     ❌     |        ✅        |
+
+| **Feature / Action**                         | **SUPERADMIN** |           **ADMIN**          | **ADMIN_REVIEWER** |        **OWNER**        |     **MANAGER**    |   **USER**   |
+| -------------------------------------------- | :------------: | :--------------------------: | :----------------: | :---------------------: | :----------------: | :----------: |
+| **Access Type**                              |   Admin Panel  |          Admin Panel         |     Admin Panel    |         Platform        |      Platform      |   Platform   |
+| **Access Admin Panel**                       |        ✅       |               ✅              |    ✅ (Read-only)   |            ❌            |          ❌         |       ❌      |
+| **Manage Roles (Create/Edit/Delete)**        |        ✅       |          ✅ (limited)         |          ❌         |            ❌            |          ❌         |       ❌      |
+| **View System Analytics / Logs**             |        ✅       |               ✅              |    ✅ (Read-only)   |            ❌            |          ❌         |       ❌      |
+| **Manage Users (All)**                       |        ✅       |               ✅              |          ❌         |            ❌            |          ❌         |       ❌      |
+| **Manage Platform Users (Company Level)**    |        ✅       |               ✅              |          ✅         |     ✅ (own company)     | ✅ (assigned users) |       ❌      |
+| **Create / Invite Users**                    |        ✅       |               ✅              |          ❌         |      ✅ (in company)     |   ✅ (in company)   |       ❌      |
+| **Assign Roles**                             |  ✅ (any role)  |     ✅ (except SUPERADMIN)    |          ❌         | ✅ (only PLATFORM roles) | ✅ (only USER role) |       ❌      |
+| **Manage Expenses (All)**                    |        ✅       |               ✅              |    ✅ (view-only)   |    ✅ (company-level)    |   ✅ (team-level)   | ✅ (own only) |
+| **View Reports / Analytics**                 |        ✅       |               ✅              |          ✅         |            ✅            |          ✅         | ✅ (own only) |
+| **Approve / Reject Expenses**                |        ✅       |               ✅              |          ✅         |            ✅            |          ✅         |       ❌      |
+| **Manage Categories / Tags**                 |   ✅ (global)   |          ✅ (global)          |          ❌         |    ✅ (company-level)    |   ✅ (team-level)   | ✅ (personal) |
+| **Manage Billing / Subscription**            |        ✅       |               ✅              |          ❌         |     ✅ (own company)     |          ❌         |       ❌      |
+| **Access Audit Logs**                        |        ✅       |               ✅              |          ✅         |            ❌            |          ❌         |       ❌      |
+| **Manage Platform Configuration / Settings** |        ✅       |               ✅              |          ❌         |            ❌            |          ❌         |       ❌      |
+| **Create / Delete Admin Users**              |        ✅       | ✅ (cannot create SUPERADMIN) |          ❌         |            ❌            |          ❌         |       ❌      |
+| **Impersonate User (for debugging)**         |        ✅       |               ❌              |          ❌         |            ❌            |          ❌         |       ❌      |
