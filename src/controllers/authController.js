@@ -5,8 +5,7 @@ import { User } from "../models/userModel.js";
 import AppError from "../utils/appError.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import generatePassword, { generateRandomPassword } from "../utils/generatePassword.js";
-
-const signToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
+import { signToken } from "../utils/signToken.js";
 
 export const createPassword = asyncHandler(async (req, res, next) => {
   const { password } = req.body;

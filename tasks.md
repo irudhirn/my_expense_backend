@@ -137,7 +137,7 @@ These tasks will push you to improve in security, scalability, performance, and 
    *  Create S3 buckets for backend
       -  Deployement
       -  Storing profile images
-      -  Storing invoice files (PDGs, images)
+      -  Storing invoice files (PDFs, images)
 
 
 | **Feature / Action**            | **User** | **Manager / Group Admin** | **Admin** | **Super Admin** |
