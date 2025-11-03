@@ -15,8 +15,12 @@ export const protect = asyncHandler(async (req, res, next) => {
   if(!token) return next(new AppError("You are not logged in!", 401));
 
   // 2) Verify token
-  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-  // console.log(decoded); // o/p -> { id: '6645dd1708e82d3ba79701b3', iat: 1715898188, exp: 1718490188 } // This id is the same id we got in response of signup
+  // const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  // console.log("decoded", decoded); // o/p -> { id: '6645dd1708e82d3ba79701b3', iat: 1715898188, exp: 1718490188 } // This id is the same id we got in response of signup
+
+  // const isAccessTokenExpired = decoded.exp < Date.now() / 1000;
+  // if(isAccessTokenExpired) return next(new AppError("Access token expired!", 401));
 
   // 3) Check if user still exists
   const curUser = await User.findById(decoded.id).populate("role");

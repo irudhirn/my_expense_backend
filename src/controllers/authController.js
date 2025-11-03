@@ -61,6 +61,23 @@ export const login = asyncHandler(async (req, res, next) => {
   // res.status(200).json({ ok: true, status: "success", message: "Login successful!", token: accessToken, data: { user } });
 });
 
+export const refresh = asyncHandler(async (req, res, next) => {
+  const token = req.cookie.refreshToken;
+  if(!token) return next(new AppError("Token expired!", 401));
+
+  try{
+    const decoded = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
+
+    const user = await User.findById(decoded.id);
+    if(!user || user.refreshToken !== token) return next(new AppError("User not found!", 403));
+
+    const accessToken = signAccessToken(user._id);
+    res.status(200).json({ ok: true, status: "success", message: "New Access Token generated successfully.", accessToken });
+  }catch(err){
+    console.error(err);
+  }
+})
+
 export const forgotPassword = asyncHandler(async (req, res, next) => {
   const { email, username } = req.body;
 

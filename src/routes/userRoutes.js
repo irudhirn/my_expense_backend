@@ -11,6 +11,8 @@ router.route("/generate-random-password").post(createPassword);
 
 router.route("/signup").post(signup);
 router.route("/login").post(login);
+router.route("/refresh").post(login);
+// router.route("/logout").post(logout);
 
 router.route("/profile").get(protect, profile);
 

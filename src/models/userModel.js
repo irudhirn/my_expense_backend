@@ -91,7 +91,11 @@ const userSchema = Schema({
   },
   imageSmall: String,
   imageMedium: String,
-  imageOriginal: String
+  imageOriginal: String,
+  refreshToken: {
+    type: String,
+    select: false
+  }
 }, { timestamps: true });
 
 userSchema.pre("save", async function(next){
