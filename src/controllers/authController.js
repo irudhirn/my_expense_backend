@@ -1,4 +1,3 @@
-import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import sendMail from "../utils/email.js";
 import { User } from "../models/userModel.js";
