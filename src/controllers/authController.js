@@ -4,7 +4,7 @@ import { User } from "../models/userModel.js";
 import AppError from "../utils/appError.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import generatePassword, { generateRandomPassword } from "../utils/generatePassword.js";
-import { signToken } from "../utils/signToken.js";
+import { signAccessToken, signRefreshToken, signToken } from "../utils/signToken.js";
 
 export const createPassword = asyncHandler(async (req, res, next) => {
   const { password } = req.body;
@@ -43,17 +43,22 @@ export const login = asyncHandler(async (req, res, next) => {
   if(!user || !(await user.isPasswordCorrect(password, user.password))) return next(new AppError("Invalid credentials!", 400));
 
   const token = signToken(user?._id);
+  const accessToken = signAccessToken(user?._id);
+  const refreshToken = signRefreshToken(user?._id);
 
   const cookieOptions = {
     expires: new Date(Date.now() + (process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000)),
     // secure: true,
     httpOnly: true
   }
-  if(process.env.NODE_ENV === "production") cookieOptions["secure"] = true;
+  // if(process.env.NODE_ENV === "production") cookieOptions["secure"] = true;
+  if(process.env.NODE_ENV !== "development") cookieOptions["secure"] = true;
 
   res.cookie('jwt', token, cookieOptions);
+  // res.cookie('refreshToken', refreshToken, cookieOptions);
 
   res.status(200).json({ ok: true, status: "success", message: "Login successful!", token, data: { user } });
+  // res.status(200).json({ ok: true, status: "success", message: "Login successful!", token: accessToken, data: { user } });
 });
 
 export const forgotPassword = asyncHandler(async (req, res, next) => {

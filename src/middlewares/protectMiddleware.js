@@ -12,7 +12,7 @@ export const protect = asyncHandler(async (req, res, next) => {
   }
   
   // 1) See if token exists
-  if(!token) return next(new AppError("You are not logged in!", 401))
+  if(!token) return next(new AppError("You are not logged in!", 401));
 
   // 2) Verify token
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);

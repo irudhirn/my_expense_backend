@@ -8,6 +8,7 @@ import rolesRouter from "./routes/roleRoutes.js";
 import expenseRouter from "./routes/expenseRoutes.js";
 import expenseCategoryRouter from "./routes/expenseCategoryRoutes.js";
 import AppError from "./utils/appError.js";
+import globalErrorController from "./controllers/errorController.js";
 
 dotenv.config({
   path: ".env"
@@ -33,8 +34,10 @@ app.use("/api/v1/roles", rolesRouter);
 app.use("/api/v1/expenses", expenseRouter);
 app.use("/api/v1/expense-categories", expenseCategoryRouter);
 
-app.all("/{*any}", (req, res, next) => {
-  next(new AppError(`The route ${req.originalUrl} not found.`, 404));
+app.all("/{*splat}", (req, res, next) => {
+  return next(new AppError(`The route ${req.originalUrl} not found.`, 404));
 });
+
+app.use(globalErrorController);
 
 export default app;
