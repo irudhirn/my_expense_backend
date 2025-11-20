@@ -39,6 +39,11 @@ const expenseSchema = Schema({
     type: Schema.Types.ObjectId,
     ref: "User",
     select: false
+  },
+  isDeleted: {
+    type: Boolean,
+    default: false,
+    select: false
   }
 }, { timestamps: true });
 

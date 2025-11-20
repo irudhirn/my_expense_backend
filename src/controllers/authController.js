@@ -54,11 +54,11 @@ export const login = asyncHandler(async (req, res, next) => {
   // if(process.env.NODE_ENV === "production") cookieOptions["secure"] = true;
   if(process.env.NODE_ENV !== "development") cookieOptions["secure"] = true;
 
-  res.cookie('jwt', token, cookieOptions);
-  // res.cookie('refreshToken', refreshToken, cookieOptions);
+  // res.cookie('jwt', token, cookieOptions);
+  res.cookie('refreshToken', refreshToken, cookieOptions);
 
-  res.status(200).json({ ok: true, status: "success", message: "Login successful!", token, data: { user } });
-  // res.status(200).json({ ok: true, status: "success", message: "Login successful!", token: accessToken, data: { user } });
+  // res.status(200).json({ ok: true, status: "success", message: "Login successful!", token, data: { user } });
+  res.status(200).json({ ok: true, status: "success", message: "Login successful!", token: accessToken, data: { user } });
 });
 
 export const refresh = asyncHandler(async (req, res, next) => {
