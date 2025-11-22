@@ -47,12 +47,14 @@ export const login = asyncHandler(async (req, res, next) => {
   const refreshToken = signRefreshToken(user?._id);
 
   const cookieOptions = {
-    expires: new Date(Date.now() + (process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000)),
-    // secure: true,
-    httpOnly: true
+    expires: new Date(Date.now() + (process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000)), // 24 * 60 * 60 * 1000 = 1d
+    secure: false,
+    httpOnly: true,
+    // sameSite: 'Lax'
+    sameSite: 'None'
   }
   // if(process.env.NODE_ENV === "production") cookieOptions["secure"] = true;
-  if(process.env.NODE_ENV !== "development") cookieOptions["secure"] = true;
+  // if(process.env.NODE_ENV !== "development") cookieOptions["secure"] = true;
 
   // res.cookie('jwt', token, cookieOptions);
   res.cookie('refreshToken', refreshToken, cookieOptions);
@@ -62,7 +64,7 @@ export const login = asyncHandler(async (req, res, next) => {
 });
 
 export const refresh = asyncHandler(async (req, res, next) => {
-  const token = req.cookie.refreshToken;
+  const token = req.cookies.refreshToken;
   if(!token) return next(new AppError("Token expired!", 401));
 
   try{
@@ -77,6 +79,16 @@ export const refresh = asyncHandler(async (req, res, next) => {
     console.error(err);
   }
 })
+
+export const logout = async (req, res) => {
+  const token = req.cookies.refreshToken;
+  if (token) {
+    const decoded = jwt.decode(token);
+    await User.findByIdAndUpdate(decoded.id, { refreshToken: null });
+  }
+  res.clearCookie("refreshToken");
+  res.json({ message: "Logged out" });
+};
 
 export const forgotPassword = asyncHandler(async (req, res, next) => {
   const { email, username } = req.body;

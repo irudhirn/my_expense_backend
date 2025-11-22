@@ -1,14 +1,12 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import cookieParser from 'cookie-parser';
 
-import adminRouter from "./routes/adminRoutes.js";
-import userRouter from "./routes/userRoutes.js";
-import rolesRouter from "./routes/roleRoutes.js";
-import expenseRouter from "./routes/expenseRoutes.js";
-import expenseCategoryRouter from "./routes/expenseCategoryRoutes.js";
+import v1Router from "./routes/v1Routes/v1Routes.js";
 import AppError from "./utils/appError.js";
 import globalErrorController from "./controllers/errorController.js";
+
 
 dotenv.config({
   path: ".env"
@@ -16,11 +14,15 @@ dotenv.config({
 
 const app = express();
 
+// Add cookie-parser middleware
+app.use(cookieParser()); 
+
 app.use(
   cors({
     origin: process.env.CORS_ORIGIN,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"]
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true
   })
 );
 
@@ -28,11 +30,12 @@ app.use(express.json({ limit: "16kb" }));
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 
 
-app.use("/api/v1/admin", adminRouter);
-app.use("/api/v1/users", userRouter);
-app.use("/api/v1/roles", rolesRouter);
-app.use("/api/v1/expenses", expenseRouter);
-app.use("/api/v1/expense-categories", expenseCategoryRouter);
+app.use("/api/v1", v1Router);
+// app.use("/api/v1/admin", adminRouter);
+// app.use("/api/v1/users", userRouter);
+// app.use("/api/v1/roles", rolesRouter);
+// app.use("/api/v1/expenses", expenseRouter);
+// app.use("/api/v1/expense-categories", expenseCategoryRouter);
 
 app.all("/{*splat}", (req, res, next) => {
   return next(new AppError(`The route ${req.originalUrl} not found.`, 404));

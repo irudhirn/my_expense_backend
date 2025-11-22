@@ -1,7 +1,7 @@
 import { Router } from "express";
-import protect from "../middlewares/protectMiddleware.js";
-import restrictTo from "../middlewares/restrictMiddleware.js";
-import { createExpenseCategory, deleteExpenseCategory, getAllExpenseCategories, getExpenseCategory, updateExpenseCategory } from "../controllers/expenseCategoryController.js";
+import protect from "../../middlewares/protectMiddleware.js";
+import restrictTo from "../../middlewares/restrictMiddleware.js";
+import { createExpenseCategory, deleteExpenseCategory, getAllExpenseCategories, getExpenseCategory, updateExpenseCategory } from "../../controllers/expenseCategoryController.js";
 
 const router = Router();
 

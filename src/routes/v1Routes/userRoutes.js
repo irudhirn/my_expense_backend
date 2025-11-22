@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { createUser, deleteUser, getAllUsers, getUser, updateUser } from "../controllers/userController.js";
-import { createPassword, forgotPassword, login, profile, resetPassword, signup, updatePassword } from "../controllers/authController.js";
-import protect from "../middlewares/protectMiddleware.js";
-import restrictTo from "../middlewares/restrictMiddleware.js";
+import { createUser, deleteUser, getAllUsers, getUser, updateUser } from "../../controllers/userController.js";
+import { createPassword, forgotPassword, login, logout, profile, refresh, resetPassword, signup, updatePassword } from "../../controllers/authController.js";
+import protect from "../../middlewares/protectMiddleware.js";
+import restrictTo from "../../middlewares/restrictMiddleware.js";
 
 const router = Router();
 
@@ -11,8 +11,8 @@ router.route("/generate-random-password").post(createPassword);
 
 router.route("/signup").post(signup);
 router.route("/login").post(login);
-router.route("/refresh").post(login);
-// router.route("/logout").post(logout);
+router.route("/refresh").post(refresh);
+router.route("/logout").post(logout);
 
 router.route("/profile").get(protect, profile);
 

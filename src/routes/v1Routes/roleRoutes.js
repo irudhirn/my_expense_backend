@@ -1,7 +1,7 @@
 import { Router } from "express";
-import protect from "../middlewares/protectMiddleware.js";
-import restrictTo from "../middlewares/restrictMiddleware.js";
-import { createRole, deleteRole, getAllRoles, getRole, updateRole } from "../controllers/roleController.js";
+import protect from "../../middlewares/protectMiddleware.js";
+import restrictTo from "../../middlewares/restrictMiddleware.js";
+import { createRole, deleteRole, getAllRoles, getRole, updateRole } from "../../controllers/roleController.js";
 
 const router = Router();
 
