@@ -46,7 +46,8 @@ const sendError = (err, res) => {
 
   // Always log in dev (and optionally in prod via Winston/Pino)
   if (isDev) console.error("💥 ERROR:", err);
-
+  // console.log("err.name", err.name);
+  // console.log("err.message", err.message);
   // Build base response
   const response = {
     ok: false,

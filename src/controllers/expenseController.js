@@ -10,6 +10,22 @@ export const getAllExpenses = asyncHandler(async (req, res, next) => {
   res.status(200).json({ ok: true, status: "success", message: (expenses && !expenses?.length) ? "No expenses found" : "Expense fetched successfully.", results: expenses.length, total: totalExpenses, data: { expenses } });
 })
 
+export const getStats = asyncHandler(async (req, res, next) => {
+  const { timePeriod } = req.params;
+  
+  const stats = await ExpensesServices.getStats(+timePeriod, req.user);
+
+  res.status(200).json({ ok: true, status: "success", message: `Stats for ${timePeriod} days fetched successfully!`, data: { stats } });
+});
+
+export const getTopExpenses = asyncHandler(async (req, res, next) => {
+  const { timePeriod } = req.params;
+
+  const topExpenses = await ExpensesServices.getTopExpenses(+timePeriod, req.user);
+
+  res.status(200).json({ ok: true, status: "success", message: `Expense insights fetched successfully`, data: topExpenses });
+})
+
 export const getExpense = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
 
