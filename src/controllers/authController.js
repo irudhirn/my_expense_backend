@@ -5,6 +5,7 @@ import AppError from "../utils/appError.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import generatePassword, { generateRandomPassword } from "../utils/generatePassword.js";
 import { signAccessToken, signRefreshToken, signToken } from "../utils/signToken.js";
+import { Role } from "../models/roleModel.js";
 
 export const createPassword = asyncHandler(async (req, res, next) => {
   const { password } = req.body;
@@ -41,6 +42,47 @@ export const login = asyncHandler(async (req, res, next) => {
   // const user = await User.findOne({username}).select("+password");
   // console.log("user",user);
   if(!user || !(await user.isPasswordCorrect(password, user.password))) return next(new AppError("Invalid credentials!", 400));
+
+  const token = signToken(user?._id);
+  const accessToken = signAccessToken(user?._id);
+  const refreshToken = signRefreshToken(user?._id);
+
+  const cookieOptions = {
+    expires: new Date(Date.now() + (process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000)), // 24 * 60 * 60 * 1000 = 1d
+    secure: false,
+    httpOnly: true,
+    // sameSite: 'Lax'
+    sameSite: 'None'
+  }
+  // if(process.env.NODE_ENV === "production") cookieOptions["secure"] = true;
+  // if(process.env.NODE_ENV !== "development") cookieOptions["secure"] = true;
+
+  // res.cookie('jwt', token, cookieOptions);
+  res.cookie('refreshToken', refreshToken, cookieOptions);
+
+  // res.status(200).json({ ok: true, status: "success", message: "Login successful!", token, data: { user } });
+  res.status(200).json({ ok: true, status: "success", message: "Login successful!", token: accessToken, data: { user } });
+});
+
+export const adminLogin = asyncHandler(async (req, res, next) => {
+  const { userId, password } = req.body;
+
+  // if(((!username || typeof username !== "string") && (!email || typeof email !== "string")) || !password){
+  if(((!userId || typeof userId !== "string")) || !password){
+    return next(new AppError("Invalid credentials!", 400));
+  }
+
+  // const role = await Role.findOne({ $or: [{ name: "SUPERADMIN" }, { name: "ADMIN" }, { name: "ADMIN_REVIEWER" }] }).select("-__v -type");
+
+  // const user = await User.findOne({ $or: [{username}, {email}] }).select("+password +role").populate({ path: "role", select: "-__v -updatedAt" });
+  const user = await User.findOne({ $or: [{username: userId}, {email: userId}] }).select("+password +role").populate({ path: "role", select: "-__v -updatedAt" });
+  // const user = await User.findOne({username}).select("+password");
+  console.log("user",user);
+  console.log("role",user.role.name);
+  if(!user || !(await user.isPasswordCorrect(password, user.password))) return next(new AppError("Invalid credentials!", 400));
+
+  // if(user.role.name !== "SUPERADMIN" || user.role.name !== "ADMIN" || user.role.name !== "ADMIN_REVIEWER") return next(new AppError("You do not have access to Admin Panel!", 400));
+  if(!["SUPERADMIN", "ADMIN", "ADMIN_REVIEWER"].includes(user.role.name)) return next(new AppError("You do not have access to Admin Panel!", 400));
 
   const token = signToken(user?._id);
   const accessToken = signAccessToken(user?._id);

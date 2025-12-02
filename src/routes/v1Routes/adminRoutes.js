@@ -5,8 +5,11 @@ import expenseRouter from "./expenseRoutes.js";
 import expenseCategoryRouter from "./expenseCategoryRoutes.js";
 import protect from "../../middlewares/protectMiddleware.js";
 import restrictTo from "../../middlewares/restrictMiddleware.js";
+import { adminLogin } from "../../controllers/authController.js";
 
 const router = Router();
+
+router.use('/login', adminLogin);
 
 router.use(protect, restrictTo("SUPERADMIN"));
 
