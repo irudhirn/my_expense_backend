@@ -8,9 +8,10 @@ import AppError from "./utils/appError.js";
 import globalErrorController from "./controllers/errorController.js";
 
 
-dotenv.config({
-  path: ".env"
-});
+// dotenv.config({
+//   path: ".env"
+// });
+dotenv.config();
 
 const app = express();
 
