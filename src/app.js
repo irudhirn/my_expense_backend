@@ -19,7 +19,7 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: [process.env.CORS_ORIGIN, "http://localhost:8081"],
+    origin: ["http://trackmymoney.co.in", "https://trackmymoney.co.in", "http://www.trackmymoney.co.in", "https://www.trackmymoney.co.in", "http://localhost:8080", "http://localhost:8081"],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true
