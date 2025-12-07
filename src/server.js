@@ -1,8 +1,15 @@
 import dotenv from "dotenv";
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
 
-dotenv.config({
-  path: ".env"
-});
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+console.log("__filename", __filename);
+console.log("__dirname", __dirname);
+
+// dotenv.config({ path: ".env" });
+dotenv.config({ path: join(__dirname, "..", ".env") });
 
 import app from "./app.js";
 import connectDB from "./db/index.js";
