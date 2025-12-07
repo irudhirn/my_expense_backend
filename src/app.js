@@ -1,6 +1,11 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+
+dotenv.config({
+  path: ".env"
+});
+
 import cookieParser from 'cookie-parser';
 
 import v1Router from "./routes/v1Routes/v1Routes.js";
@@ -8,10 +13,7 @@ import AppError from "./utils/appError.js";
 import globalErrorController from "./controllers/errorController.js";
 
 
-// dotenv.config({
-//   path: ".env"
-// });
-dotenv.config();
+// dotenv.config();
 
 const app = express();
 
