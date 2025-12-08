@@ -8,6 +8,9 @@ import expenseCategoryRouter from "./expenseCategoryRoutes.js";
 
 const router = Router();
 
+router.route("/").get((req, res, next) => res.status(200).json({ ok: true, status: "success", message: "🟢 Hello from TrackMyMoney" }));
+// router.route("/").get((req, res, next) => res.send("🙏🏻 Hello from TrackMyMoney🟢"));
+
 router.use("/admin", adminRouter);
 router.use("/users", userRouter);
 router.use("/roles", rolesRouter);

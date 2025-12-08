@@ -31,7 +31,7 @@ const userSchema = Schema({
     lowerCase: true,
     trim: true,
     minLength: 2,
-    maxLength: 20,
+    maxLength: 40,
     unique: true,
     validate: [validator.isEmail, "Email is invalid."]
   },

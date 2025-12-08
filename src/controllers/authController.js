@@ -16,18 +16,18 @@ export const createPassword = asyncHandler(async (req, res, next) => {
 })
 
 export const signup = asyncHandler(async (req, res, next) => {
-  const { firstName, lastName, username, email, password, passwordConfirm } = req.body;
-
+  const { firstName, lastName, username, email, password, confirmPassword } = req.body;
+  
   if(!firstName?.trim() || !lastName?.trim() || !username?.trim() || !email?.trim() || !password?.trim()){
     return res.status(400).json({ ok: false, status: "fail", message: "All fields are required!" })
   }
-
-  const existingUser = await User.find({ username, email });
-
-  if(!existingUser) return next(new AppError("User with provided Username OR Email already exists.\nTry with different Username OR Email!", 400));
-
-  const user = await User.create({ firstName, lastName, username, email, password, passwordConfirm });
-
+  
+  const existingUser = await User.findOne({ username, email });
+  
+  if(!!existingUser) return next(new AppError("User with provided Username OR Email already exists.\nTry with different Username OR Email!", 400));
+  
+  const user = await User.create({ firstName, lastName, username, email, password, passwordConfirm: confirmPassword });
+  
   res.status(201).json({ ok: true, status: "success", message: "Signup successful!", data: { user } })
 });
 
