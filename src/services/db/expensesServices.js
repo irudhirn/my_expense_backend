@@ -84,7 +84,7 @@ class ExpensesServices {
     const periods = { 7: 7, 30: 30, 90: 90, 180: 180, 365: 365 };
 
     return await Expense.aggregate([
-      { $match: { user: new mongoose.Types.ObjectId(userId) } },
+      { $match: { user: new mongoose.Types.ObjectId(userId), isDeleted: { $ne: true } } },
       {
         $facet: {
           last_7_days: [
@@ -103,7 +103,7 @@ class ExpensesServices {
 
   async getTopExpenses(timePeriod = 30, user){
     const topExpenses = await Expense.aggregate([
-      { $match: { expenseDate: { $gte: new Date(Date.now() - timePeriod * 1000 * 60 * 60 * 24) }, user: new mongoose.Types.ObjectId(user?._id) } },
+      { $match: { expenseDate: { $gte: new Date(Date.now() - timePeriod * 1000 * 60 * 60 * 24) }, user: new mongoose.Types.ObjectId(user?._id), isDeleted: { $ne: true } } },
       { $lookup: {
           from: "expensecategories", // $lookup - Joins the expensecategories collection with your expense documents using expenseCategory field
           localField: "expenseCategory", // 

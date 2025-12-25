@@ -8,7 +8,7 @@ const router = Router();
 router
   .route("/")
   .get(getAllExpenseCategories)
-  .post(protect, restrictTo("SUPERADMIN"), (req, _, next) => { console.log("req.body", req.body); next(); }, createExpenseCategory);
+  .post(protect, restrictTo("SUPERADMIN"), createExpenseCategory);
 
 router
   .route("/:id")

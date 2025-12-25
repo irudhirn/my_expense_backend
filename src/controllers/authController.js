@@ -22,25 +22,33 @@ export const signup = asyncHandler(async (req, res, next) => {
     return res.status(400).json({ ok: false, status: "fail", message: "All fields are required!" })
   }
   
-  const existingUser = await User.findOne({ username, email });
+  // const existingUser = await User.findOne({ username, email }); // not secured - This finds a user if either username or email matches. An attacker could use someone's email with a new username to trigger "already exists" or vice versa.
+  const existingUser = await User.findOne({ $or: [{ username }, { email }] });
   
-  if(!!existingUser) return next(new AppError("User with provided Username OR Email already exists.\nTry with different Username OR Email!", 400));
+  // if(!!existingUser) return next(new AppError("User with provided Username OR Email already exists.\nTry with different Username OR Email!", 400)); // Don't expose which field exists. An attacker can use this to enumerate (discover) existing accounts. After trying few permutation & combinations of email/username & common passwords, attacker knows valid usernames/emails for targeted phishing or brute-force attacks.
+  if (existingUser) return next(new AppError("An account with these credentials already exists", 400));
   
   const user = await User.create({ firstName, lastName, username, email, password, passwordConfirm: confirmPassword });
+
+  user.password = undefined; // don't expose in response
+  user.passwordConfirm = undefined; // don't expose in response
   
   res.status(201).json({ ok: true, status: "success", message: "Signup successful!", data: { user } })
 });
 
 export const login = asyncHandler(async (req, res, next) => {
-  const { username, email, password } = req.body;
+  // const { username, email, password } = req.body;
+  const { userId, password } = req.body;
 
-  if(((!username || typeof username !== "string") && (!email || typeof email !== "string")) || !password){
+  // if(((!username || typeof username !== "string") && (!email || typeof email !== "string")) || !password){
+  if(((!userId || typeof userId !== "string")) || !password){
     return next(new AppError("Invalid credentials!", 400));
   }
 
-  const user = await User.findOne({ $or: [{username}, {email}] }).select("+password +role").populate({ path: "role", select: "-__v -updatedAt" });
+  const user = await User.findOne({ $or: [{username: userId}, {email: userId}] }).select("+password +role").populate({ path: "role", select: "-__v -updatedAt" });
   // const user = await User.findOne({username}).select("+password");
   // console.log("user",user);
+
   if(!user || !(await user.isPasswordCorrect(password, user.password))) return next(new AppError("Invalid credentials!", 400));
 
   const token = signToken(user?._id);

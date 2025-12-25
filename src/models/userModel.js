@@ -21,14 +21,16 @@ const userSchema = Schema({
   username: {
     type: String,
     trim: true,
-    minLength: 2,
+    minLength: 3,
     maxLength: 20,
     unique: true,
+    required: [true, "Username is required"],
+    match: [/^[a-zA-Z0-9_]+$/, "Username can only contain letters, numbers, and underscores"]
   },
   email: {
     type: String,
     required: [true, "Email is required"],
-    lowerCase: true,
+    lowercase: true,
     trim: true,
     minLength: 2,
     maxLength: 40,
@@ -38,13 +40,13 @@ const userSchema = Schema({
   role: {
     type: Schema.Types.ObjectId,
     ref: "Role",
-    default: new mongoose.Types.ObjectId("689d005e7928c83d065cc227")
+    default: new mongoose.Types.ObjectId("689d00517928c83d065cc224")
   },
   password: {
     type: String,
-    required: [true, "Password is required."],
+    // required: [true, "Password is required."],
     trim: true,
-    minLength: 6,
+    minLength: 8,
     select: false,
     required: [function () { return this.isModified('password'); }, 'Password is required.'], // Password is required during login.
   },

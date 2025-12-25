@@ -1,8 +1,11 @@
 import { User } from "../models/userModel.js";
+import UserServices from "../services/db/userServices.js";
 import asyncHandler from "../utils/asyncHandler.js"
 
 export const getAllUsers = asyncHandler(async (req, res, next) => {
-  const users = await User.find();
+  const { page } = req.params;
+  const users = await UserServices.getAllUsers();
+  // const users = await User.find().populate("role");
 
   res.status(200).json({ ok: true, data: { users } });
 })

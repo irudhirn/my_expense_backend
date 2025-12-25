@@ -1,19 +1,11 @@
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
-
-// dotenv.config({
-//   path: ".env"
-// });
 
 import cookieParser from 'cookie-parser';
 
 import v1Router from "./routes/v1Routes/v1Routes.js";
 import AppError from "./utils/appError.js";
 import globalErrorController from "./controllers/errorController.js";
-
-
-// dotenv.config();
 
 const app = express();
 
@@ -34,11 +26,6 @@ app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 
 
 app.use("/api/v1", v1Router);
-// app.use("/api/v1/admin", adminRouter);
-// app.use("/api/v1/users", userRouter);
-// app.use("/api/v1/roles", rolesRouter);
-// app.use("/api/v1/expenses", expenseRouter);
-// app.use("/api/v1/expense-categories", expenseCategoryRouter);
 
 app.all("/{*splat}", (req, res, next) => {
   return next(new AppError(`The route ${req.originalUrl} not found.`, 404));

@@ -3,13 +3,14 @@ import { createUser, deleteUser, getAllUsers, getUser, updateUser } from "../../
 import { createPassword, forgotPassword, login, logout, profile, refresh, resetPassword, signup, updatePassword } from "../../controllers/authController.js";
 import protect from "../../middlewares/protectMiddleware.js";
 import restrictTo from "../../middlewares/restrictMiddleware.js";
+import { signUpRateLimit } from "../../utils/rateLimiter.js";
 
 const router = Router();
 
 router.route("/create-password").post(createPassword);
 router.route("/generate-random-password").post(createPassword);
 
-router.route("/signup").post(signup);
+router.route("/signup").post(signUpRateLimit, signup);
 router.route("/login").post(login);
 router.route("/refresh").post(refresh);
 router.route("/logout").post(logout);
