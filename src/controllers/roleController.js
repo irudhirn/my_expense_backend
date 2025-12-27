@@ -10,7 +10,6 @@ export const getRole = asyncHandler(async (req, res, next) => {
   
 })
 export const createRole = asyncHandler(async (req, res, next) => {
-  console.log("reached");
   const { role } = req.body;
   const newRole = await Role.create({ role });
 

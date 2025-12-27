@@ -6,6 +6,7 @@ import asyncHandler from "../utils/asyncHandler.js";
 import generatePassword, { generateRandomPassword } from "../utils/generatePassword.js";
 import { signAccessToken, signRefreshToken, signToken } from "../utils/signToken.js";
 import { Role } from "../models/roleModel.js";
+import { processAndUploadImage } from "../services/image/imageService.js";
 
 export const createPassword = asyncHandler(async (req, res, next) => {
   const { password } = req.body;
@@ -231,4 +232,36 @@ export const profile = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.user.id).select("-__v").populate({path:"role", select: "-__v"});
 
   res.status(200).json({ ok: true, status: "success", message: "Profile details fetched successfully!", data: { user } });
+});
+
+export const uploadProfileImage = asyncHandler(async (req, res, next) => {
+  if (!req.file) {
+    return res.status(400).json({
+      status: 'fail',
+      message: 'Please provide an image file',
+    });
+  }
+
+  // Process and upload images
+  const imageUrls = await processAndUploadImage(req.file);
+
+  // Update user document
+  const user = await User.findByIdAndUpdate(
+    req.user._id, // Assuming you have auth middleware
+    {
+      imageSmall: imageUrls.imageSmall,
+      imageMedium: imageUrls.imageMedium,
+      imageLarge: imageUrls.imageLarge,
+    },
+    { new: true, runValidators: true }
+  );
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      imageSmall: user.imageSmall,
+      imageMedium: user.imageMedium,
+      imageLarge: user.imageLarge,
+    },
+  });
 });

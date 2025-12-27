@@ -1,9 +1,10 @@
 import { Router } from "express";
 import { createUser, deleteUser, getAllUsers, getUser, updateUser } from "../../controllers/userController.js";
-import { createPassword, forgotPassword, login, logout, profile, refresh, resetPassword, signup, updatePassword } from "../../controllers/authController.js";
+import { createPassword, forgotPassword, login, logout, profile, refresh, resetPassword, signup, updatePassword, uploadProfileImage } from "../../controllers/authController.js";
 import protect from "../../middlewares/protectMiddleware.js";
 import restrictTo from "../../middlewares/restrictMiddleware.js";
 import { signUpRateLimit } from "../../utils/rateLimiter.js";
+import { upload } from "../../services/image/imageService.js";
 
 const router = Router();
 
@@ -16,6 +17,7 @@ router.route("/refresh").post(refresh);
 router.route("/logout").post(logout);
 
 router.route("/profile").get(protect, profile);
+router.route("/upload-profile-image").post(protect, upload.single("image"), uploadProfileImage);
 
 router.route("/forgot-password").post(forgotPassword);
 router.route("/reset-password/:id").patch(resetPassword);
