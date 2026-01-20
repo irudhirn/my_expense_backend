@@ -50,6 +50,19 @@ export const deleteUser = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
   
   const user = await User.findById(id);
+
+  // Delete profile images from S3
+  await deleteUserImagesFromS3(user);
+
+  // // Soft delete or hard delete
+  // if (user.isDeleted !== undefined) {
+  //   // Soft delete
+  //   user.isDeleted = true;
+  //   await user.save({ validateBeforeSave: false });
+  // } else {
+  //   // Hard delete
+  //   await user.deleteOne();
+  // }
   
   user.isDeleted = true;
   await user.save({ validateBeforeSave: false });

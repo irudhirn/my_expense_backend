@@ -6,7 +6,7 @@ import asyncHandler from "../utils/asyncHandler.js";
 import generatePassword, { generateRandomPassword } from "../utils/generatePassword.js";
 import { signAccessToken, signRefreshToken, signToken } from "../utils/signToken.js";
 import { Role } from "../models/roleModel.js";
-import { processAndUploadImage } from "../services/image/imageService.js";
+import { deleteImagesFromS3, processAndUploadImage } from "../services/image/imageService.js";
 
 export const createPassword = asyncHandler(async (req, res, next) => {
   const { password } = req.body;
@@ -263,5 +263,40 @@ export const uploadProfileImage = asyncHandler(async (req, res, next) => {
       imageMedium: user.imageMedium,
       imageLarge: user.imageLarge,
     },
+  });
+});
+
+/**
+ * Delete profile image
+ */
+export const deleteProfileImage = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user._id);
+
+  if (!user.imageSmall && !user.imageMedium && !user.imageLarge) {
+    return res.status(400).json({
+      status: 'fail',
+      message: 'No profile image to delete',
+    });
+  }
+
+  const imageUrls = {
+    imageSmall: user.imageSmall,
+    imageMedium: user.imageMedium,
+    imageLarge: user.imageLarge,
+  };
+
+  // Delete from S3
+  await deleteImagesFromS3(imageUrls);
+
+  // Remove URLs from database
+  user.imageSmall = undefined;
+  user.imageMedium = undefined;
+  user.imageLarge = undefined;
+  await user.save({ validateBeforeSave: false });
+
+  res.status(200).json({
+    ok: true,
+    status: 'success',
+    message: 'Profile image deleted successfully',
   });
 });
