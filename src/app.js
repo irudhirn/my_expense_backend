@@ -10,7 +10,7 @@ import globalErrorController from "./controllers/errorController.js";
 const app = express();
 
 // Add cookie-parser middleware
-app.use(cookieParser()); 
+app.use(cookieParser());
 
 app.use(
   cors({

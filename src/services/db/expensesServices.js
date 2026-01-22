@@ -20,12 +20,13 @@ class ExpensesServices {
     if(req.query.maxAmount) amountFilter["$lte"] = +req.query.maxAmount;
     if(Object.keys(amountFilter).length > 0) filters["expenseAmount"] = { ...amountFilter }
     if(req.query.expenseCategory) filters["expenseCategory"] = req.query.expenseCategory;
+    // if(req.query.sortBy) filters["sortBy"] = req.query.sortBy;
     // if(req.query.isDeleted) filters["isDeleted"] = {  };
     
     const totalExpenses = await Expense.countDocuments(filters);
     
     // const expenses = await expensesQuery.query.select("-__v -updatedAt").populate({ path: "expenseCategory", select: "-__v -createdAt -updatedAt" });
-    const expenses = await Expense.find(filters).select("-__v -updatedAt").populate({ path: "expenseCategory", select: "-__v -createdAt -updatedAt" });
+    const expenses = await Expense.find(filters).sort({ expenseDate: 1 }).select("-__v -updatedAt").populate({ path: "expenseCategory", select: "-__v -createdAt -updatedAt" });
 
     return { expenses, totalExpenses };
   }
