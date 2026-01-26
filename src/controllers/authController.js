@@ -7,6 +7,7 @@ import generatePassword, { generateRandomPassword } from "../utils/generatePassw
 import { signAccessToken, signRefreshToken, signToken } from "../utils/signToken.js";
 import { Role } from "../models/roleModel.js";
 import { deleteImagesFromS3, processAndUploadImage } from "../services/image/imageService.js";
+import jwt from "jsonwebtoken";
 
 export const createPassword = asyncHandler(async (req, res, next) => {
   const { password } = req.body;
@@ -65,6 +66,9 @@ export const login = asyncHandler(async (req, res, next) => {
   }
   // if(process.env.NODE_ENV === "production") cookieOptions["secure"] = true;
   // if(process.env.NODE_ENV !== "development") cookieOptions["secure"] = true;
+
+  user.refreshToken = refreshToken;
+  await user.save({ validateBeforeSave: false });
 
   // res.cookie('jwt', token, cookieOptions);
   res.cookie('refreshToken', refreshToken, cookieOptions);

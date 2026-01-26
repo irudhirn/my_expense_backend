@@ -5,9 +5,9 @@ import APIFeatures from "../utils/apiFeatures.js";
 import ExpensesServices from "../services/db/expensesServices.js";
 
 export const getAllExpenses = asyncHandler(async (req, res, next) => {
-  const { expenses, totalExpenses } = await ExpensesServices.findExpenses(req);
+  const { expenses, totalExpenses, totalPages } = await ExpensesServices.findExpenses(req);
 
-  res.status(200).json({ ok: true, status: "success", message: (expenses && !expenses?.length) ? "No expenses found" : "Expense fetched successfully.", results: expenses.length, total: totalExpenses, data: { expenses } });
+  res.status(200).json({ ok: true, status: "success", message: (expenses && !expenses?.length) ? "No expenses found" : "Expense fetched successfully.", results: expenses.length, total: totalExpenses, totalPages, data: { expenses } });
 })
 
 export const getStats = asyncHandler(async (req, res, next) => {

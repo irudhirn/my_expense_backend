@@ -127,9 +127,13 @@ export const processAndUploadImage = async (file) => {
         position: 'center',
         withoutEnlargement: true,
       })
-      .jpeg({ 
+      // .jpeg({ 
+      //   quality: 85,
+      //   progressive: true, // Progressive JPEG for better loading
+      // })
+      .webp({ 
         quality: 85,
-        progressive: true, // Progressive JPEG for better loading
+        lossless: true, // Lossless WEBP
       })
       .toBuffer();
 

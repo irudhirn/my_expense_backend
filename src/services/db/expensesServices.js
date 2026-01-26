@@ -7,6 +7,9 @@ class ExpensesServices {
   }
 
   async findExpenses(req){
+    const page = req.query.page ? parseInt(req.query.page) : 1;
+    const limit = req.query.limit ? parseInt(req.query.limit) : 10;
+    const skip = (page - 1) * limit;
     const filters = { user: req.user.id, isDeleted: req.query.isDeleted ? req.query.isDeleted === "true" : { $ne: true } };
     let now = new Date();
     const dateFilter = {
@@ -26,9 +29,9 @@ class ExpensesServices {
     const totalExpenses = await Expense.countDocuments(filters);
     
     // const expenses = await expensesQuery.query.select("-__v -updatedAt").populate({ path: "expenseCategory", select: "-__v -createdAt -updatedAt" });
-    const expenses = await Expense.find(filters).sort({ expenseDate: 1 }).select("-__v -updatedAt").populate({ path: "expenseCategory", select: "-__v -createdAt -updatedAt" });
+    const expenses = await Expense.find(filters).skip(skip).limit(limit).sort({ expenseDate: 1 }).select("-__v -updatedAt").populate({ path: "expenseCategory", select: "-__v -createdAt -updatedAt" });
 
-    return { expenses, totalExpenses };
+    return { expenses, totalExpenses, totalPages: Math.ceil(totalExpenses / limit) };
   }
 
   async getStats(timePeriod = 7, user){
